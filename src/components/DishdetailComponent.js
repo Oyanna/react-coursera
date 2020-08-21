@@ -5,6 +5,7 @@ import { Link,  } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 
 
@@ -118,13 +119,18 @@ class CommentForm extends Component {
            
         return (
             <div className="col-12 col-md-5 m-1">
-                <Card>
-                    <CardImg top src={baseUrl + dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
+                 <FadeTransform in
+                     transformProps={{
+                     exitTransform: 'scale(0.5) translateY(-50%)'
+                    }}>
+                    <Card>
+                        <CardImg top src={baseUrl + dish.image} alt={dish.name} />
+                        <CardBody>
+                            <CardTitle>{dish.name}</CardTitle>
+                            <CardText>{dish.description}</CardText>
+                        </CardBody>
+                    </Card>
+                </FadeTransform>
              </div>
         );
     }
@@ -138,28 +144,28 @@ class CommentForm extends Component {
                 <div>
                     <h4>Comments</h4>
                     <ul className="list-unstyled">
-                        {
-                            comments.map((commnent) => {
-                                console.log(commnent.author);
-                                return (
-                                    <ul className="list-unstyled">
-                                        <li key={commnent.id}>
-                                            <p> {commnent.comment}</p></li>
-                                        <li key={commnent.id}>
-                                            <p> --{commnent.author}, 
-                                            {
-                                                new Intl.DateTimeFormat('en-US', {
-                                                    year: 'numeric',
-                                                    month: 'short',
-                                                    day: '2-digit'
-                                                }).format(new Date(commnent.date))
-                                            }
-                                            </p>
-                                        </li>
-                                    </ul>
-                                );
-                            })
-                        }                    
+                        <Stagger in>
+                            {comments.map((commnent) => {
+                                    console.log(commnent.author);
+                                    return (
+                                        <Fade in>
+                                            <ul className="list-unstyled">
+                                                <li key={commnent.id}>
+                                                    <p> {commnent.comment}</p></li>
+                                                <li key={commnent.id}>
+                                                    <p> --{commnent.author}, 
+                                                    {new Intl.DateTimeFormat('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'short',
+                                                            day: '2-digit'
+                                                        }).format(new Date(commnent.date))}
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </Fade>
+                                    );
+                                })}  
+                        </Stagger>                  
                     </ul>
                 </div>
                 <CommentForm dishId={dishId} postComment={postComment} />
